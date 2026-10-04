@@ -1,1 +1,1 @@
-"""StormHacks garbage sorting game server."""
+"""Trash Royale garbage sorting game server."""

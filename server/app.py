@@ -2,9 +2,13 @@
 
 import argparse
 import json
+import logging
 import mimetypes
 import os
+import random
+import tempfile
 import threading
+import time
 from contextlib import ExitStack
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -18,6 +22,10 @@ from .scene_detector import SceneDetector, thumbnail
 
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
+LOG = logging.getLogger(__name__)
+CLASSIFICATION_ATTEMPTS = 3
+TRANSIENT_GEMINI_CODES = {408, 500, 502, 503, 504}
+CAMERA_LOG_INTERVAL = 10.0
 
 
 class GameHTTPServer(ThreadingHTTPServer):
@@ -27,7 +35,12 @@ class GameHTTPServer(ThreadingHTTPServer):
 
 class GameApp:
     def __init__(self, game, demo=False, serial_port=None, baud=460800,
-                 model="gemini-3.8-flash", frame_interval=0.4, motor=None):
+                 model="gemini-3.8-flash", frame_interval=0.4, motor=None, save_latest=None,
+                 presence_threshold=11, motion_threshold=4):
+        if not 0 < presence_threshold <= 255:
+            raise ValueError("Presence threshold must be greater than 0 and at most 255")
+        if not 0 <= motion_threshold <= 255:
+            raise ValueError("Motion threshold must be between 0 and 255")
         self.game = game
         self.demo = demo
         self.serial_port = serial_port
@@ -35,14 +48,20 @@ class GameApp:
         self.model = model
         self.frame_interval = frame_interval
         self.motor = motor
+        self.save_latest = Path(save_latest) if save_latest is not None else None
         self.lock = threading.RLock()
-        self.detector = SceneDetector()
+        self.detector = SceneDetector(presence_threshold=presence_threshold,
+                                      motion_threshold=motion_threshold)
         self.pending = None
         self.classifying = False
         self.routing = False
         self.motor_fault = False
         self.last_classification = None
         self.latest_jpeg = None
+        self.frame_count = 0
+        self.last_frame_at = None
+        self.camera_connected = False
+        self.frame_save_error = None
         self.status = "Demo ready" if demo else "Connecting to camera"
         self.error = None
         self.stop = threading.Event()
@@ -56,6 +75,14 @@ class GameApp:
                 "status": self.status,
                 "error": self.error,
                 "has_frame": self.latest_jpeg is not None,
+                "frame_count": self.frame_count,
+                "frame_interval": self.frame_interval,
+                "frame_age_seconds": (round(max(0, time.monotonic() - self.last_frame_at), 1)
+                                      if self.last_frame_at is not None else None),
+                "camera_connected": self.camera_connected,
+                "frame_save_error": self.frame_save_error,
+                "scene": self.detector.snapshot(),
+                "classification_gate": self._classification_gate(),
                 "classifying": self.classifying,
                 "last_classification": dict(self.last_classification) if self.last_classification else None,
                 "motor": {
@@ -66,6 +93,30 @@ class GameApp:
                 },
             })
             return result
+
+    def _classification_gate(self):
+        """Called with the app lock held to explain what blocks a new request."""
+        if self.demo:
+            return "demo_mode"
+        if not self.camera_connected:
+            return "camera_disconnected"
+        if self.motor_fault:
+            return "motor_fault"
+        if self.routing:
+            return "motor_routing"
+        if self.pending:
+            return "pending_item"
+        if self.classifying:
+            return "classification_in_progress"
+        if self.detector.reference is None:
+            return "no_empty_reference"
+        if self.detector.occupied:
+            return "waiting_for_area_to_clear"
+        if not self.detector.present:
+            return "no_scene_change"
+        if not self.detector.settled:
+            return "scene_moving"
+        return "waiting_for_stable_frames"
 
     def demo_item(self, item, label):
         if not self.demo:
@@ -200,6 +251,158 @@ class GameApp:
             self.status = "Waiting for the sorting area to clear"
             return event
 
+    def _save_latest_frame(self, jpeg):
+        """Publish a complete JPEG atomically without interrupting live capture."""
+        if self.save_latest is None:
+            return
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                    dir=self.save_latest.parent, prefix=f".{self.save_latest.name}.",
+                    suffix=".tmp", delete=False) as output:
+                temporary = Path(output.name)
+                output.write(jpeg)
+            os.replace(temporary, self.save_latest)
+        except OSError as error:
+            message = f"Could not save camera frame to {self.save_latest}: {error}"
+            with self.lock:
+                changed = self.frame_save_error != message
+                self.frame_save_error = message
+            if changed:
+                LOG.error("%s; live camera capture will continue", message)
+        else:
+            with self.lock:
+                recovered = self.frame_save_error is not None
+                self.frame_save_error = None
+            if recovered:
+                LOG.info("Camera frame saving recovered: %s", self.save_latest)
+        finally:
+            if temporary is not None:
+                try:
+                    temporary.unlink(missing_ok=True)
+                except OSError as error:
+                    LOG.warning("Could not remove temporary camera file %s: %s", temporary, error)
+
+    def _watch_camera(self, camera, client, classify):
+        """Retry temporary Gemini failures only while fresh frames show a stable item."""
+        attempts = 0
+        retry_after = None
+        retry_stable_frames = 0
+        frame_count = 0
+        last_capture_log = None
+        try:
+            while not self.stop.is_set():
+                jpeg = camera.read_jpeg()
+                if self.stop.is_set():
+                    break
+                pixels = thumbnail(jpeg)
+                self._save_latest_frame(jpeg)
+                frame_count += 1
+                captured_at = time.monotonic()
+                with self.lock:
+                    self.latest_jpeg = jpeg
+                    self.frame_count += 1
+                    self.last_frame_at = captured_at
+                    total_frames = self.frame_count
+                    establishing_reference = self.detector.reference is None
+                    change = self.detector.observe(pixels)
+                    present, settled = self.detector.present, self.detector.settled
+                    if (establishing_reference and not self.pending and not self.classifying
+                            and not self.routing and not self.motor_fault):
+                        self.status = "Camera ready; place one item in the sorting area"
+                    elif (not self.detector.occupied and not self.pending and not self.classifying
+                          and not self.routing and not self.motor_fault):
+                        self.status = (f"Scene changed; waiting for a still item "
+                                       f"({self.detector.stable_count}/{self.detector.stable_frames})"
+                                       if present else "Camera ready; place one item in the sorting area")
+                    if retry_after is not None and not present:
+                        # Cancel on the first empty frame, before the detector's
+                        # three-frame clear latch can permit the next item.
+                        retry_after = None
+                        retry_stable_frames = 0
+                        self.classifying = False
+                        self.error = None
+                        self.status = "Item removed; clear the sorting area before the next item"
+                        LOG.info("Classification retry canceled: item removed")
+                    if change == "clear":
+                        if self.motor is not None and self.pending and self.pending["label"] == "unknown":
+                            self.pending = None
+                        if not self.pending:
+                            self.status = ("Motor fault; check gate positions and restart" if self.motor_fault
+                                           else "Ready for the next item")
+                        LOG.info("Sorting area cleared")
+                    elif (self.detector.occupied and not self.pending and not self.classifying
+                          and not self.routing and not self.motor_fault and self.error is None):
+                        self.status = (f"Waiting for the sorting area to clear "
+                                       f"({self.detector.clear_count}/{self.detector.clear_frames})")
+                    if retry_after is not None:
+                        retry_stable_frames = retry_stable_frames + 1 if present and settled else 0
+                    retry_ready = (retry_after is not None and time.monotonic() >= retry_after
+                                   and retry_stable_frames >= self.detector.stable_frames)
+                    should_classify = ((change == "item" or retry_ready) and self.pending is None
+                                       and not self.routing and not self.motor_fault)
+                    if should_classify:
+                        if change == "item":
+                            attempts = 0
+                        attempts += 1
+                        retry_after = None
+                        retry_stable_frames = 0
+                        self.classifying = True
+                        self.status = ("Classifying item with Gemini" if attempts == 1 else
+                                       f"Retrying Gemini classification ({attempts}/{CLASSIFICATION_ATTEMPTS})")
+                    gate = self._classification_gate()
+                    scene = self.detector.snapshot()
+                if frame_count == 1:
+                    LOG.info("Camera frame received (%s bytes); empty-area reference established", len(jpeg))
+                    last_capture_log = captured_at
+                elif captured_at - last_capture_log >= CAMERA_LOG_INTERVAL:
+                    LOG.info("Camera frame %s received (%s bytes); Gemini gate=%s, "
+                             "scene change=%.2f/%s, motion=%.2f/%s, phase=%s, progress=%s/%s",
+                             total_frames, len(jpeg), gate, scene["reference_difference"],
+                             scene["presence_threshold"], scene["motion_difference"],
+                             scene["motion_threshold"], scene["phase"], scene["progress_count"],
+                             scene["progress_frames_required"])
+                    last_capture_log = captured_at
+                LOG.debug("Camera frame %s received (%s bytes)", total_frames, len(jpeg))
+                if should_classify:
+                    LOG.info("Gemini classification attempt %s/%s (%s)",
+                             attempts, CLASSIFICATION_ATTEMPTS, self.model)
+                    try:
+                        result = classify(jpeg, CATEGORIES, client, self.model)
+                        if self.stop.is_set():
+                            break
+                        self.handle_classification(result)
+                        LOG.info("Classification completed: %s -> %s", result["item"], result["label"])
+                    except MotorError as error:
+                        # Routing already marks faults and blocks the item. A
+                        # partial motor cycle must never trigger another retry.
+                        LOG.error("Motor routing failed: %s", error)
+                    except Exception as error:
+                        code = getattr(error, "code", None)
+                        message = getattr(error, "message", None) or str(error)
+                        with self.lock:
+                            self.error = f"Gemini {code}: {message}" if code else message
+                            if code in TRANSIENT_GEMINI_CODES and attempts < CLASSIFICATION_ATTEMPTS:
+                                delay = 2 ** attempts + random.uniform(0, 0.5)
+                                retry_after = time.monotonic() + delay
+                                self.status = (f"Gemini temporarily unavailable; retrying "
+                                               f"({attempts + 1}/{CLASSIFICATION_ATTEMPTS}) shortly")
+                                # Keep reset actions blocked until this logical
+                                # classification finishes or its item is removed.
+                                self.classifying = True
+                                LOG.warning("Gemini %s; next attempt in %.1f seconds", code, delay)
+                            else:
+                                self.classifying = False
+                                self.status = ("Gemini still unavailable; clear area to try again"
+                                               if code in TRANSIENT_GEMINI_CODES else
+                                               "Gemini quota or rate limit reached; check quota and clear area to retry"
+                                               if code == 429 else "Classification failed; clear area to retry")
+                                LOG.error("Classification failed after %s attempt(s): %s", attempts, self.error)
+                self.stop.wait(self.frame_interval)
+        finally:
+            with self.lock:
+                self.classifying = False
+
     def run_camera(self):
         from google import genai
         from .esp32_cam_rcv import Esp32SerialCamera
@@ -209,44 +412,23 @@ class GameApp:
         while not self.stop.is_set():
             try:
                 with Esp32SerialCamera(self.serial_port, self.baud) as camera:
+                    LOG.info("Camera connected on %s at %s baud",
+                             camera.port, self.baud)
                     with self.lock:
+                        self.camera_connected = True
                         if not self.motor_fault:
                             self.status = "Clear the sorting area; first frame sets the empty reference"
                             self.error = None
                         self.detector.reset()
-                    while not self.stop.is_set():
-                        jpeg = camera.read_jpeg()
-                        pixels = thumbnail(jpeg)
+                    try:
+                        self._watch_camera(camera, client, classify_jpeg)
+                    finally:
                         with self.lock:
-                            self.latest_jpeg = jpeg
-                            change = self.detector.observe(pixels)
-                            if change == "clear":
-                                if self.motor is not None and self.pending and self.pending["label"] == "unknown":
-                                    self.pending = None
-                                if not self.pending:
-                                    self.status = ("Motor fault; check gate positions and restart" if self.motor_fault
-                                                   else "Ready for the next item")
-                            should_classify = change == "item" and self.pending is None and not self.motor_fault
-                            if should_classify:
-                                self.classifying = True
-                                self.status = "Classifying item with Gemini"
-                        if should_classify:
-                            try:
-                                result = classify_jpeg(jpeg, CATEGORIES, client, self.model)
-                                if self.stop.is_set():
-                                    break
-                                self.handle_classification(result)
-                            except MotorError:
-                                # The item remains blocked for inspection; do not repeat a partial cycle.
-                                pass
-                            except Exception as error:
-                                with self.lock:
-                                    self.classifying = False
-                                    self.status = "Classification failed; clear area to retry"
-                                    self.error = str(error)
-                        self.stop.wait(self.frame_interval)
+                            self.camera_connected = False
             except Exception as error:
+                LOG.error("Camera disconnected; retrying: %s", error)
                 with self.lock:
+                    self.camera_connected = False
                     self.status = "Camera disconnected; retrying"
                     self.error = str(error)
                     self.detector.reset()
@@ -340,6 +522,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--demo", action="store_true", help="Use manual items without camera or API key")
     parser.add_argument("--host", default="127.0.0.1")
@@ -349,7 +532,14 @@ def main():
     parser.add_argument("--serial-port", help="CH340 device; auto-detected if omitted")
     parser.add_argument("--baud", type=int, default=460800)
     parser.add_argument("--model", default="gemini-3.8-flash")
-    parser.add_argument("--frame-interval", type=float, default=0.4)
+    parser.add_argument("--frame-interval", type=float, default=0.4,
+                        help="Pause between camera cycles in seconds (default: 0.4)")
+    parser.add_argument("--save-latest", type=Path,
+                        help="Also atomically overwrite this file with each decoded camera JPEG")
+    parser.add_argument("--presence-threshold", type=float, default=11,
+                        help="Minimum mean difference from the empty reference (default: 11)")
+    parser.add_argument("--motion-threshold", type=float, default=4,
+                        help="Maximum mean difference between settled frames (default: 4)")
     parser.add_argument("--motors", action="store_true", help="Automatically route recognized items using A4988 motors")
     parser.add_argument("--motor-library", type=Path, default=DEFAULT_LIBRARY)
     parser.add_argument("--motor-map", type=parse_motor_inputs, default=DEFAULT_MOTOR_INPUTS,
@@ -359,6 +549,10 @@ def main():
         parser.error("Set GEMINI_API_KEY, or run with --demo")
     if args.frame_interval < 0:
         parser.error("--frame-interval cannot be negative")
+    if not 0 < args.presence_threshold <= 255:
+        parser.error("--presence-threshold must be greater than 0 and at most 255")
+    if not 0 <= args.motion_threshold <= 255:
+        parser.error("--motion-threshold must be between 0 and 255")
     if args.demo and args.motors:
         parser.error("--motors requires live camera mode; demo mode never moves hardware")
 
@@ -373,7 +567,9 @@ def main():
             except MotorError as error:
                 parser.error(str(error))
         app = GameApp(game, args.demo, args.serial_port, args.baud,
-                      args.model, args.frame_interval, motor)
+                      args.model, args.frame_interval, motor, args.save_latest,
+                      presence_threshold=args.presence_threshold,
+                      motion_threshold=args.motion_threshold)
         handler = type("StormHacksHandler", (Handler,), {"app": app})
         server = GameHTTPServer((args.host, args.port), handler)
         cleanup.callback(server.server_close)
@@ -386,7 +582,7 @@ def main():
         if not args.demo:
             thread = threading.Thread(target=app.run_camera, daemon=True)
             thread.start()
-        print(f"StormHacks game at http://{args.host}:{args.port} ({'demo' if args.demo else 'camera'})")
+        print(f"Trash Royale game at http://{args.host}:{args.port} ({'demo' if args.demo else 'camera'})")
         try:
             server.serve_forever()
         except KeyboardInterrupt:

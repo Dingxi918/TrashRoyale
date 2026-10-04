@@ -19,6 +19,7 @@ from typing import Any, Dict, Sequence
 
 
 DEFAULT_MODEL = "gemini-3.8-flash"
+REQUEST_TIMEOUT_MS = 30_000
 
 
 def classify_jpeg(
@@ -53,6 +54,12 @@ def classify_jpeg(
             types.Part.from_bytes(data=jpeg_bytes, mime_type="image/jpeg"),
         ],
         config=types.GenerateContentConfig(
+            # The camera loop owns bounded retries and checks fresh frames
+            # between attempts. Avoid multiplying its calls with SDK retries.
+            http_options=types.HttpOptions(
+                timeout=REQUEST_TIMEOUT_MS,
+                retry_options=types.HttpRetryOptions(attempts=1),
+            ),
             response_mime_type="application/json",
             response_schema={
                 "type": "object",

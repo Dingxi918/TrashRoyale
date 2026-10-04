@@ -65,6 +65,7 @@ class Esp32SerialCamera:
             baudrate=self.baud,
             timeout=0.1,
             write_timeout=2.0,
+            exclusive=True,
         )
 
         # CH340 boards often connect DTR/RTS to the ESP32 reset/boot pins.
@@ -176,10 +177,11 @@ def main() -> int:
             return 1
     frame_count = 0
     start_time = time.monotonic()
+    last_report = None
 
     try:
         with Esp32SerialCamera(args.port, args.baud, args.timeout) as camera:
-            print("Connected to {} at {} baud".format(camera.port, camera.baud))
+            print("Connected to {} at {} baud".format(camera.port, camera.baud), flush=True)
             print("Press q in the preview window, or Ctrl+C, to quit.")
 
             while True:
@@ -198,6 +200,12 @@ def main() -> int:
 
                     if args.save_latest:
                         args.save_latest.write_bytes(jpeg)
+
+                    if args.headless and (last_report is None or time.monotonic() - last_report >= 1.0):
+                        print("Frame {} received: {} bytes ({:.1f} FPS)".format(
+                            frame_count, len(jpeg), fps
+                        ), flush=True)
+                        last_report = time.monotonic()
 
                     if not args.headless:
                         label = "{}  {:.1f} FPS  {} bytes".format(
