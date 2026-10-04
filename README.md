@@ -31,8 +31,7 @@ Set the Gemini key in the Pi shell, keeping it out of shell history:
 ```bash
 read -rsp 'Gemini API key: ' GEMINI_API_KEY; echo
 export GEMINI_API_KEY
-.venv/bin/python -m server.app --host 0.0.0.0 \
-  --serial-port /dev/ttyUSB0 --baud 460800
+.venv/bin/python -m server.app --motors --model gemini-3.5-flash-lite --host 127.0.0.1
 ```
 
 Leave the sorting area empty for the first frame. Place one object and let your hand leave the view. The sorting status inside the current-project bar will show the item and predicted category. Without motors, tap the actual bin's confirmation button below the pending item after disposal; a wrong bin or `unknown` earns no resource. The **+1** buttons remain available for additional simulated scores. The camera must see the area clear before it classifies another item. If the empty reference was taken with an item present, clear the area and use **Reset empty-area reference**. `--model` overrides the default Gemini model. `--frame-interval` sets the pause after each camera cycle in seconds; the default is **0.4 seconds**, plus capture, transfer, and processing time.
