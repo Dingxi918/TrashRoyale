@@ -108,3 +108,5 @@ int fake_nanosleep(const struct timespec *duration, struct timespec *remaining)
     (void)remaining;
     return 0;
 }
+
+unsigned int fake_sleep(unsigned int duration) { (void)duration; return 0; }

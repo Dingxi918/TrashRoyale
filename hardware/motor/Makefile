@@ -4,7 +4,7 @@ CPPFLAGS += -D_DEFAULT_SOURCE
 LDLIBS += -lgpiod
 
 .PHONY: all
-all: libmotor.so
+all: libmotor.so motor_test
 
 libmotor.so: motor.c motor.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -std=c11 -fPIC -shared -o $@ motor.c $(LDFLAGS) $(LDLIBS)

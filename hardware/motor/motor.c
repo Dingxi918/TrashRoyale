@@ -14,10 +14,9 @@ static const char *consumers[3][2] = {
     {"MOTOR3-STEP", "MOTOR3-DIR"},
 };
 
-/* 1.8-degree full steps: M1 = 45 degrees, M2/M3 nearest to 70 = 70.2 degrees. */
-static const int travel_steps[3] = {25, 39, 39};
+static const int travel_steps[3] = {30, 40, 40};
 
-#define STEP_DELAY_US 500
+#define STEP_DELAY_US 10000
 #define HOLD_SECONDS 1
 #define CW 0
 #define CCW 1

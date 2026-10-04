@@ -32,6 +32,7 @@ class NativeMotorTests(unittest.TestCase):
         subprocess.run([
             "gcc", "-std=c11", "-D_DEFAULT_SOURCE", "-Wall", "-Wextra", "-Werror",
             "-fPIC", "-shared", "-Dusleep=fake_usleep", "-Dnanosleep=fake_nanosleep",
+            "-Dsleep=fake_sleep",
             "-I", str(ROOT / "tests/native"), str(ROOT / "hardware/motor/motor.c"),
             str(ROOT / "tests/native/fake_gpio.c"), "-o", str(cls.library_path),
         ], check=True, capture_output=True)
@@ -56,7 +57,7 @@ class NativeMotorTests(unittest.TestCase):
         self.motor.initialize()
         expected = {1: {17: 1, 24: 0}, 2: {17: 1, 24: 1},
                     3: {17: 0, 5: 0}, 4: {17: 0, 5: 1}}
-        travel_steps = {17: 25, 24: 39, 5: 39}
+        travel_steps = {17: 100, 24: 56, 5: 56}
         for category, motor_input in DEFAULT_MOTOR_INPUTS.items():
             with self.subTest(category=category):
                 self.gpio.fake_clear_log()
@@ -132,7 +133,7 @@ class NativeMotorTests(unittest.TestCase):
         self.assertEqual(state["correct_sorts"], 1)
         self.assertEqual(state["history"][0]["source"], "motor")
         self.assertEqual(state["history"][0]["motor_input"], 2)
-        self.assertEqual(self.gpio.fake_pulses(17), 50)
+        self.assertEqual(self.gpio.fake_pulses(17), 200)
         self.assertIsNone(state["pending"])
         with self.assertRaises(ValueError):
             app.confirm("recycling")
@@ -164,8 +165,8 @@ class NativeMotorTests(unittest.TestCase):
         self.assertEqual(classify.call_count, 2)
         self.assertEqual(self.game.snapshot()["correct_sorts"], 1)
         self.assertEqual(self.game.snapshot()["history"][0]["motor_input"], 3)
-        self.assertEqual(self.gpio.fake_pulses(17), 50)
-        self.assertEqual(self.gpio.fake_pulses(5), 78)
+        self.assertEqual(self.gpio.fake_pulses(17), 200)
+        self.assertEqual(self.gpio.fake_pulses(5), 112)
         self.assertEqual(self.gpio.fake_pulses(24), 0)
 
 

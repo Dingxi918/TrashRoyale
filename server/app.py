@@ -438,6 +438,11 @@ class GameApp:
 class Handler(BaseHTTPRequestHandler):
     app = None
 
+    def log_request(self, code="-", size="-"):
+        """Keep failed requests visible without logging every poll or asset load."""
+        if isinstance(code, int) and code >= 400:
+            super().log_request(code, size)
+
     def _send(self, status, content, mime):
         self.send_response(status)
         self.send_header("Content-Type", mime)
