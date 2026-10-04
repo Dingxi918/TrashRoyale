@@ -1,0 +1,9 @@
+Use case: stylized-concept
+Asset type: game environment texture used to render the rocky underside of a floating island beneath an existing isometric pixel-art village.
+Input images: Image 1 (grass_01.png) and Image 2 (cliff_01.png) are STYLE AND PALETTE REFERENCES ONLY. Do not copy their tiles or checkerboards.
+Primary request: Create one large rectangular, opaque texture of an exposed earth-and-stone cliff face. The texture must fill the entire image edge to edge. Warm brown soil strata near the upper edge transition into weathered sandstone rock below, with angular fractured stones, vertical cracks, irregular rock shelves, ochre highlights, muted mauve shadow crevices and a few very small mossy green patches. It will be clipped to two tapered isometric rock faces in the game, so do not draw an island silhouette, grassy top surface, horizon, sky, buildings or any background.
+Style/medium: charming cozy detailed 2D pixel art matching the supplied assets, discrete pixel clusters, crisp blocky contours, restrained warm earth palette. Broad natural vertical rock formations, subtle layered earth, not repetitive bricks or a stone wall.
+Composition: flat frontal material surface, landscape rectangle, stone material covering every pixel. Relatively uniform readable texture rather than one focal object.
+Constraints: No text, labels, borders, watermark, UI, transparency, sky or blank margin.
+
+Generated with the built-in image_gen tool. The renderer clips and projects this material onto two world-space rock faces derived from the terrain grid.

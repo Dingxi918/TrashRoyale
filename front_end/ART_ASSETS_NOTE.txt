@@ -1,1 +1,0 @@
-All environment, building, nature and background images in the respective folders come from your Cozy_Game_Assets(1).zip. The four resource icons and six construction-stage images are retained from the earlier Little River prototype because they were not in your ZIP. Your original asset names are unchanged.

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#76927d">
+<title>Trash Royale — Build a Village Together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+ <div class="vignette" aria-hidden="true"></div>
+ <aside class="sidebar" aria-label="Community resources">
+ <section class="parchment resources" aria-label="Community Resources">
+  <span class="flourish top">✿</span>
+  <h1>Community Resources</h1>
+  <div id="resourceGrid" class="resource-grid"></div>
+  <span class="flourish bottom-corner">✿</span>
+ </section>
+ </aside>
+ <section id="villageStage" class="village-stage" aria-label="Village map">
+  <canvas id="village" width="1440" height="900" aria-label="Trash Royale isometric village"></canvas>
+  <div id="toast" class="toast" aria-live="polite"></div>
+ </section>
+ <footer class="bottom">
+  <section class="parchment current" aria-label="Current project">
+   <img id="projectImage" src="assets/community/library.png" alt="Current project illustration">
+   <div class="current-info">
+    <div class="current-heading">
+     <small>Current Project</small>
+     <button type="button" id="resetGame" class="ui-button" disabled>Reset game</button>
+    </div>
+    <h2 id="projectTitle">Connecting to the village…</h2>
+    <div class="progress-row"><div class="track"><i id="currentBar"></i></div><span id="currentPercent">0%</span></div>
+    <p id="projectDescription">Together, our sorting helps the village grow.</p>
+   </div>
+   <section id="binPanel" class="sorting-status" aria-label="Sorting bin status" hidden>
+    <b id="binMode">Sorting bin</b>
+    <p id="binStatus" role="status">Connecting to the village…</p>
+    <p id="pendingItem" hidden></p>
+    <small id="sortHint">Resources are shared by everyone in this village.</small>
+    <div id="confirmBins" class="confirm-bins" aria-label="Confirm the disposal bin" hidden>
+     <button type="button" class="ui-button" data-confirm-bin="recycling">Recycling bin</button>
+     <button type="button" class="ui-button" data-confirm-bin="compost">Compost bin</button>
+     <button type="button" class="ui-button" data-confirm-bin="paper">Paper bin</button>
+     <button type="button" class="ui-button" data-confirm-bin="garbage">Garbage bin</button>
+    </div>
+    <p id="binError" class="bin-error" role="alert" hidden></p>
+    <div id="binActions" class="bin-actions" hidden>
+     <button type="button" id="dismissItem" class="ui-button" hidden>Dismiss item</button>
+     <button type="button" id="resetScene" class="ui-button" hidden>Reset empty-area reference</button>
+    </div>
+   </section>
+  </section>
+  <section class="test-controls" aria-label="Add demo resources">
+   <button type="button" class="sort-button recycle" data-sort="recycling" disabled><img src="assets/ui/icon_recycling.png" alt=""><span>Recycling</span><strong>+1</strong></button>
+   <button type="button" class="sort-button compost" data-sort="compost" disabled><img src="assets/ui/icon_compost.png" alt=""><span>Compost</span><strong>+1</strong></button>
+   <button type="button" class="sort-button paper" data-sort="paper" disabled><img src="assets/ui/icon_paper.png" alt=""><span>Paper</span><strong>+1</strong></button>
+   <button type="button" class="sort-button garbage" data-sort="garbage" disabled><img src="assets/ui/icon_garbage.png" alt=""><span>Garbage</span><strong>+1</strong></button>
+  </section>
+ </footer>
+ <aside class="parchment daily" aria-label="Today's Projects">
+  <span class="flourish top">✿</span>
+  <div class="daily-heading"><h1>Today's Projects</h1><span id="dailyCount">—</span></div>
+  <div class="daily-scroll" id="dailyList"></div>
+  <span class="flourish bottom-corner">✿</span>
+ </aside>
+</main>
+<dialog id="resetGameDialog" class="parchment reset-dialog" aria-labelledby="resetTitle" aria-describedby="resetDescription">
+ <form method="dialog">
+  <h2 id="resetTitle">Start a new village?</h2>
+  <p id="resetDescription">This clears all project progress, completed buildings, resources, and sorting history for everyone. A new map and eight fresh projects will be generated.</p>
+  <div class="reset-dialog-actions">
+   <button type="submit" class="ui-button" value="cancel" autofocus>Keep village</button>
+   <button type="submit" class="ui-button reset-confirm" value="reset">Reset game</button>
+  </div>
+ </form>
+</dialog>
+<script src="map-navigation.js"></script>
+<script src="island-effects.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

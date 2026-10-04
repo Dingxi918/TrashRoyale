@@ -11,7 +11,6 @@ new object is present and the scene has settled. Set GEMINI_API_KEY first.
 """
 
 import argparse
-import base64
 import json
 import os
 import sys
@@ -45,21 +44,17 @@ def classify_jpeg(
         "hidden materials or local disposal rules."
     ).format(", ".join(allowed))
 
-    interaction = client.interactions.create(
+    from google.genai import types
+
+    response = client.models.generate_content(
         model=model,
-        store=False,
-        input=[
-            {"type": "text", "text": prompt},
-            {
-                "type": "image",
-                "data": base64.b64encode(jpeg_bytes).decode("ascii"),
-                "mime_type": "image/jpeg",
-            },
+        contents=[
+            prompt,
+            types.Part.from_bytes(data=jpeg_bytes, mime_type="image/jpeg"),
         ],
-        response_format={
-            "type": "text",
-            "mime_type": "application/json",
-            "schema": {
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema={
                 "type": "object",
                 "properties": {
                     "item": {"type": "string"},
@@ -67,9 +62,9 @@ def classify_jpeg(
                 },
                 "required": ["item", "label"],
             },
-        },
+        ),
     )
-    result = json.loads(interaction.output_text)
+    result = json.loads(response.text or "")
     if not isinstance(result, dict) or result.get("label") not in allowed:
         raise ValueError("Unexpected Gemini classification: {!r}".format(result))
     if not isinstance(result.get("item"), str):
@@ -94,7 +89,10 @@ def main() -> int:
         if args.image is not None:
             jpeg = args.image.read_bytes()
         else:
-            from esp32_serial_camera import Esp32SerialCamera
+            try:
+                from .esp32_cam_rcv import Esp32SerialCamera
+            except ImportError:
+                from esp32_cam_rcv import Esp32SerialCamera
 
             with Esp32SerialCamera(args.port, baud=args.baud) as camera:
                 jpeg = camera.read_jpeg()

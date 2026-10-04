@@ -15,8 +15,6 @@ import time
 from pathlib import Path
 from typing import Optional
 
-import cv2
-import numpy as np
 import serial
 from serial.tools import list_ports
 
@@ -24,7 +22,7 @@ from serial.tools import list_ports
 MAGIC = b"CAM1"
 REQUEST_FRAME = b"G"
 CH340_VENDOR_ID = 0x1A86
-DEFAULT_BAUD = 921600
+DEFAULT_BAUD = 460800
 MAX_JPEG_SIZE = 2_000_000
 
 
@@ -129,8 +127,13 @@ class Esp32SerialCamera:
 
         return self._read_exact(frame_length, deadline)
 
-    def read(self) -> np.ndarray:
+    def read(self):
         """Request, decode, and return one OpenCV BGR frame."""
+        try:
+            import cv2
+            import numpy as np
+        except ImportError as error:
+            raise RuntimeError("OpenCV preview needs opencv-python and numpy") from error
         jpeg = self.read_jpeg()
         frame = cv2.imdecode(np.frombuffer(jpeg, dtype=np.uint8), cv2.IMREAD_COLOR)
         if frame is None:
@@ -163,6 +166,14 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    cv2 = None
+    if not args.headless:
+        try:
+            import cv2
+            import numpy as np
+        except ImportError:
+            print("Preview needs opencv-python and numpy; use --headless for JPEG capture")
+            return 1
     frame_count = 0
     start_time = time.monotonic()
 
@@ -174,11 +185,12 @@ def main() -> int:
             while True:
                 try:
                     jpeg = camera.read_jpeg()
-                    frame = cv2.imdecode(
-                        np.frombuffer(jpeg, dtype=np.uint8), cv2.IMREAD_COLOR
-                    )
-                    if frame is None:
-                        raise ValueError("OpenCV could not decode the received JPEG")
+                    if not args.headless:
+                        frame = cv2.imdecode(
+                            np.frombuffer(jpeg, dtype=np.uint8), cv2.IMREAD_COLOR
+                        )
+                        if frame is None:
+                            raise ValueError("OpenCV could not decode the received JPEG")
 
                     frame_count += 1
                     elapsed = max(time.monotonic() - start_time, 0.001)
@@ -215,7 +227,8 @@ def main() -> int:
         print("Serial camera error: {}".format(error))
         return 1
     finally:
-        cv2.destroyAllWindows()
+        if cv2 is not None:
+            cv2.destroyAllWindows()
 
     return 0
 
