@@ -1,0 +1,46 @@
+:root{--ink:#604630;--line:#b88a5e;--paper:#f9e9ca;--sage:#83986a}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:"Patrick Hand",Georgia,serif;color:var(--ink);background:#77947e}
+button{font:inherit;color:inherit;cursor:pointer}
+#app{position:relative;width:100vw;height:100dvh;min-height:400px;overflow:hidden;background:linear-gradient(#a5b6a5,#789a83 52%,#668a69)}
+#village{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
+.vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 65px #32452c44;background:linear-gradient(180deg,#f9e8bf05,#4d654018 95%)}
+.parchment{position:absolute;background:radial-gradient(ellipse at 20% 10%,#fff7e2fa,#f5dfb8f9 83%,#e7c998f9);border:4px solid #a77949;border-radius:12px;box-shadow:inset 0 0 0 2px #fff0cf,inset 0 0 0 5px #d8b187,0 5px 0 #6d4d3080,0 10px 26px #3a2c2259}
+.parchment:before{content:"";position:absolute;inset:7px;border:1px solid #bf995d60;border-radius:5px;pointer-events:none}
+.flourish{position:absolute;color:#83905a;text-shadow:1px 1px #e3bc78;font-size:29px;z-index:2;pointer-events:none}.flourish.top{top:-20px;left:-14px}.flourish.bottom-corner{bottom:-21px;right:-13px}
+h1,h2{font-family:"Cormorant Garamond",Georgia,serif;line-height:1.03;font-weight:700;font-style:italic}
+.resources{top:20px;left:20px;width:190px;height:450px;padding:12px 10px 10px}
+.resources h1{text-align:center;font-size:26px;margin:0 0 11px}
+.resource-grid{display:flex;flex-direction:column;gap:7px}
+.resource-item{display:flex;align-items:center;gap:7px;background:#fff5d89c;border:1px solid #dbb58a;border-radius:8px;min-width:0;min-height:80px;padding:8px 7px}
+.resource-item img{height:36px;width:36px;flex-shrink:0;object-fit:contain}
+.resource-info{flex:1;min-width:0}.resource-name{font-family:"Cormorant Garamond",Georgia,serif;font-size:18px;font-style:italic;font-weight:700;line-height:1}.resource-count{font-size:17px;line-height:1.1;margin:2px 0}
+.track{height:10px;flex:1;min-width:0;background:#dcc4a1;border-radius:999px;box-shadow:inset 0 1px 3px #76583c65;overflow:hidden}.track i{display:block;width:0;height:100%;background:#82966d;border-radius:999px;transition:width .35s}.resource-info .track{height:6px}
+.resource-item.pulse{animation:pulse .6s ease-out}.resource-item.pulse img{filter:drop-shadow(0 0 9px #f9dc72)}@keyframes pulse{0%,100%{transform:scale(1)}35%{transform:scale(1.085);filter:brightness(1.1)}}
+.daily{right:18px;top:18px;bottom:18px;width:316px;display:flex;flex-direction:column;padding:11px 10px 9px}
+.daily-heading{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:0 5px 4px}.daily-heading h1{font-size:31px;margin:0;white-space:nowrap}.daily-heading>span{font-size:17px;white-space:nowrap}
+.daily-scroll{overflow-y:auto;min-height:0;display:flex;flex-direction:column;gap:7px;padding:4px 3px 8px;scrollbar-color:#caa478 transparent;scrollbar-width:thin}
+.daily-entry{width:100%;display:flex;align-items:center;min-height:86px;gap:8px;text-align:left;padding:6px 7px;border:1px solid #d8b58e;background:#fff4dbb8;border-radius:8px;box-shadow:0 2px 4px #9871491d}
+.daily-entry.active{border:2px solid #91a46c;background:#f1efd6}.daily-entry:disabled{opacity:.64}
+.daily-entry img{width:71px;height:70px;flex-shrink:0;object-fit:contain;filter:drop-shadow(1px 3px 2px #80604730)}
+.daily-text{min-width:0;flex:1}.daily-text b{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-size:19px;line-height:1.02}.daily-text small{display:block;margin:2px 0;font-size:13px;line-height:1.08;white-space:nowrap}.daily-text .track{height:6px;width:75%;margin-top:5px}.daily-status{margin-top:3px;font-size:13px;color:#76835f;line-height:1}
+.bottom{position:absolute;left:221px;right:351px;bottom:18px;height:136px;display:flex;align-items:stretch;gap:9px}
+.current{position:relative;display:flex;gap:5px;align-items:center;flex:1;min-width:0;padding:10px}
+.current img{width:105px;height:104px;max-width:33%;object-fit:contain;flex-shrink:0}
+.current-info{flex:1;min-width:0}.current-info>small{font-size:14px}.current h2{font-size:26px;line-height:1;margin:1px 0 7px}
+.progress-row{display:flex;align-items:center;gap:6px;font-size:15px}.current p{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:15px;line-height:1.04;margin:7px 0 0}
+.test-controls{width:49%;display:flex;gap:4px;min-width:0}
+.sort-button{border:3px solid #956a41;box-shadow:inset 0 0 0 2px #ffefd0,0 4px 0 #694b35ab,0 7px 12px #3a2a2142;border-radius:10px;display:flex;flex:1;min-width:0;align-items:center;justify-content:center;flex-direction:column;gap:0;padding:4px 1px;font-size:13px;line-height:1.05;touch-action:manipulation}
+.sort-button img{width:37px;height:39px;object-fit:contain}.sort-button strong{font-size:20px;line-height:1.05}.sort-button:active{transform:translateY(3px)}
+.sort-button.recycle{background:linear-gradient(#f9d9bf,#e3aa8d)}.sort-button.compost{background:linear-gradient(#eef0cf,#b9c694)}.sort-button.paper{background:linear-gradient(#fcf2e2,#e9cfb4)}.sort-button.garbage{background:linear-gradient(#ffeac4,#edc17a)}
+.toast{position:absolute;top:17%;left:49%;transform:translate(-50%,-10px);background:#fff3d2fa;border:3px solid #b58958;box-shadow:0 6px 15px #57453255;border-radius:9px;padding:8px 17px;font-size:25px;font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+/* Maintain proportions on small landscape displays, including iPad in landscape. */
+@media(max-width:1100px){.resources{width:154px;left:10px;top:10px;height:375px;padding:9px 7px}.resources h1{font-size:21px;margin-bottom:7px}.resource-grid{gap:5px}.resource-item{min-height:67px;gap:4px;padding:3px}.resource-item img{width:29px;height:31px}.resource-name{font-size:16px}.resource-count{font-size:14px}.daily{width:260px;right:9px;top:9px;bottom:9px;padding:8px}.daily-heading h1{font-size:25px}.daily-entry{min-height:69px;padding:4px;gap:5px}.daily-entry img{width:52px;height:53px}.daily-text b{font-size:16px}.daily-text small,.daily-status{font-size:11px}.bottom{left:171px;right:277px;bottom:12px;height:112px;gap:6px}.current{padding:5px}.current img{width:73px;height:84px}.current h2{font-size:20px}.current p{font-size:12px}.sort-button{font-size:11px;border-width:2px}.sort-button img{width:29px;height:30px}.sort-button strong{font-size:17px}}
+@media(max-height:720px){.resources{height:355px}.resource-item{min-height:60px}.daily-entry{min-height:66px}.daily-entry img{width:51px;height:51px}.bottom{height:103px}.current img{height:84px}.current p{display:none}}
+
+/* Custom illustrated resource icons for all four daily project requirements. */
+.need-list{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;white-space:nowrap;min-width:0;margin:3px 0 1px}
+.need-chip{display:inline-flex;align-items:center;gap:1px;font:13px/1 'Patrick Hand',Georgia,serif;white-space:nowrap}
+.need-chip img{display:block;width:17px;height:17px;object-fit:contain;flex-shrink:0;filter:none}
+@media(max-width:1100px){.need-list{gap:3px}.need-chip{font-size:11px}.need-chip img{width:14px;height:14px}}

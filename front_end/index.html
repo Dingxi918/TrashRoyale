@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#76927d">
+<title>Little River — Build a Village Together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+ <canvas id="village" width="1440" height="900" aria-label="Little River isometric village"></canvas>
+ <div class="vignette" aria-hidden="true"></div>
+ <section class="parchment resources" aria-label="Community Resources">
+  <span class="flourish top">✿</span>
+  <h1>Community<br>Resources</h1>
+  <div id="resourceGrid" class="resource-grid"></div>
+  <span class="flourish bottom-corner">✿</span>
+ </section>
+ <aside class="parchment daily" aria-label="Today's Projects">
+  <span class="flourish top">✿</span>
+  <div class="daily-heading"><h1>Today's Projects</h1><span id="dailyCount">0 / 8</span></div>
+  <div class="daily-scroll" id="dailyList"></div>
+  <span class="flourish bottom-corner">✿</span>
+ </aside>
+ <footer class="bottom">
+  <section class="parchment current" aria-label="Current project">
+   <img id="projectImage" src="assets/community/library.png" alt="Current project illustration">
+   <div class="current-info">
+    <small>Current Project</small>
+    <h2 id="projectTitle">Community Library</h2>
+    <div class="progress-row"><div class="track"><i id="currentBar"></i></div><span id="currentPercent">0%</span></div>
+    <p id="projectDescription">A place for learning, meeting, and growing together.</p>
+   </div>
+  </section>
+  <section class="test-controls" aria-label="Test the sorting inputs">
+   <button type="button" class="sort-button recycle" data-sort="recycling"><img src="assets/ui/icon_recycling.png" alt=""><span>Recycling</span><strong>+1</strong></button>
+   <button type="button" class="sort-button compost" data-sort="compost"><img src="assets/ui/icon_compost.png" alt=""><span>Compost</span><strong>+1</strong></button>
+   <button type="button" class="sort-button paper" data-sort="paper"><img src="assets/ui/icon_paper.png" alt=""><span>Paper</span><strong>+1</strong></button>
+   <button type="button" class="sort-button garbage" data-sort="garbage"><img src="assets/ui/icon_garbage.png" alt=""><span>Garbage</span><strong>+1</strong></button>
+  </section>
+ </footer>
+ <div id="toast" class="toast" aria-live="polite"></div>
+</main>
+<script src="game.js"></script>
+</body>
+</html>

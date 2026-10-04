@@ -1,0 +1,1406 @@
+[
+  {
+    "file": "terrain/grass_01.png",
+    "source_box": [
+      12,
+      37,
+      109,
+      124
+    ],
+    "size": [
+      99,
+      83
+    ]
+  },
+  {
+    "file": "terrain/grass_02.png",
+    "source_box": [
+      113,
+      37,
+      212,
+      124
+    ],
+    "size": [
+      99,
+      84
+    ]
+  },
+  {
+    "file": "terrain/grass_03.png",
+    "source_box": [
+      216,
+      37,
+      314,
+      124
+    ],
+    "size": [
+      103,
+      84
+    ]
+  },
+  {
+    "file": "terrain/grass_04.png",
+    "source_box": [
+      318,
+      37,
+      419,
+      124
+    ],
+    "size": [
+      106,
+      89
+    ]
+  },
+  {
+    "file": "terrain/grass_05.png",
+    "source_box": [
+      423,
+      37,
+      523,
+      124
+    ],
+    "size": [
+      103,
+      87
+    ]
+  },
+  {
+    "file": "terrain/path_01.png",
+    "source_box": [
+      12,
+      155,
+      109,
+      244
+    ],
+    "size": [
+      99,
+      85
+    ]
+  },
+  {
+    "file": "terrain/path_02.png",
+    "source_box": [
+      113,
+      155,
+      212,
+      244
+    ],
+    "size": [
+      99,
+      86
+    ]
+  },
+  {
+    "file": "terrain/path_03.png",
+    "source_box": [
+      216,
+      155,
+      314,
+      244
+    ],
+    "size": [
+      99,
+      87
+    ]
+  },
+  {
+    "file": "terrain/path_04.png",
+    "source_box": [
+      318,
+      155,
+      419,
+      244
+    ],
+    "size": [
+      103,
+      88
+    ]
+  },
+  {
+    "file": "terrain/path_05.png",
+    "source_box": [
+      423,
+      155,
+      523,
+      244
+    ],
+    "size": [
+      103,
+      87
+    ]
+  },
+  {
+    "file": "water/water_01.png",
+    "source_box": [
+      546,
+      37,
+      639,
+      124
+    ],
+    "size": [
+      96,
+      84
+    ]
+  },
+  {
+    "file": "water/water_02.png",
+    "source_box": [
+      643,
+      37,
+      737,
+      124
+    ],
+    "size": [
+      101,
+      85
+    ]
+  },
+  {
+    "file": "water/water_03.png",
+    "source_box": [
+      741,
+      37,
+      842,
+      124
+    ],
+    "size": [
+      104,
+      86
+    ]
+  },
+  {
+    "file": "water/water_04.png",
+    "source_box": [
+      846,
+      37,
+      947,
+      124
+    ],
+    "size": [
+      101,
+      85
+    ]
+  },
+  {
+    "file": "water/water_05.png",
+    "source_box": [
+      951,
+      37,
+      1043,
+      124
+    ],
+    "size": [
+      98,
+      87
+    ]
+  },
+  {
+    "file": "water/water_06.png",
+    "source_box": [
+      544,
+      155,
+      638,
+      249
+    ],
+    "size": [
+      98,
+      84
+    ]
+  },
+  {
+    "file": "water/water_07.png",
+    "source_box": [
+      642,
+      155,
+      736,
+      249
+    ],
+    "size": [
+      99,
+      99
+    ]
+  },
+  {
+    "file": "water/water_08.png",
+    "source_box": [
+      740,
+      155,
+      840,
+      249
+    ],
+    "size": [
+      101,
+      99
+    ]
+  },
+  {
+    "file": "water/waterfall_01.png",
+    "source_box": [
+      844,
+      155,
+      945,
+      249
+    ],
+    "size": [
+      97,
+      101
+    ]
+  },
+  {
+    "file": "water/waterfall_02.png",
+    "source_box": [
+      949,
+      155,
+      1044,
+      249
+    ],
+    "size": [
+      96,
+      101
+    ]
+  },
+  {
+    "file": "cliffs/cliff_01.png",
+    "source_box": [
+      1065,
+      37,
+      1152,
+      125
+    ],
+    "size": [
+      84,
+      89
+    ]
+  },
+  {
+    "file": "cliffs/cliff_02.png",
+    "source_box": [
+      1156,
+      37,
+      1244,
+      125
+    ],
+    "size": [
+      82,
+      89
+    ]
+  },
+  {
+    "file": "cliffs/cliff_03.png",
+    "source_box": [
+      1248,
+      37,
+      1339,
+      125
+    ],
+    "size": [
+      81,
+      87
+    ]
+  },
+  {
+    "file": "cliffs/cliff_04.png",
+    "source_box": [
+      1343,
+      37,
+      1434,
+      125
+    ],
+    "size": [
+      82,
+      90
+    ]
+  },
+  {
+    "file": "cliffs/cliff_05.png",
+    "source_box": [
+      1438,
+      37,
+      1526,
+      125
+    ],
+    "size": [
+      83,
+      91
+    ]
+  },
+  {
+    "file": "cliffs/cliff_06.png",
+    "source_box": [
+      1065,
+      155,
+      1152,
+      249
+    ],
+    "size": [
+      86,
+      86
+    ]
+  },
+  {
+    "file": "cliffs/cliff_07.png",
+    "source_box": [
+      1156,
+      155,
+      1244,
+      249
+    ],
+    "size": [
+      86,
+      98
+    ]
+  },
+  {
+    "file": "cliffs/cliff_08.png",
+    "source_box": [
+      1248,
+      155,
+      1339,
+      249
+    ],
+    "size": [
+      86,
+      98
+    ]
+  },
+  {
+    "file": "cliffs/cliff_09.png",
+    "source_box": [
+      1343,
+      155,
+      1434,
+      249
+    ],
+    "size": [
+      79,
+      95
+    ]
+  },
+  {
+    "file": "cliffs/cliff_10.png",
+    "source_box": [
+      1438,
+      155,
+      1526,
+      249
+    ],
+    "size": [
+      85,
+      93
+    ]
+  },
+  {
+    "file": "trees/tree_cherry.png",
+    "source_box": [
+      12,
+      304,
+      115,
+      428
+    ],
+    "size": [
+      111,
+      130
+    ]
+  },
+  {
+    "file": "trees/tree_green.png",
+    "source_box": [
+      119,
+      304,
+      221,
+      428
+    ],
+    "size": [
+      106,
+      130
+    ]
+  },
+  {
+    "file": "trees/tree_autumn.png",
+    "source_box": [
+      225,
+      304,
+      333,
+      428
+    ],
+    "size": [
+      100,
+      123
+    ]
+  },
+  {
+    "file": "trees/tree_pine.png",
+    "source_box": [
+      337,
+      304,
+      437,
+      428
+    ],
+    "size": [
+      94,
+      128
+    ]
+  },
+  {
+    "file": "trees/tree_flower.png",
+    "source_box": [
+      441,
+      304,
+      548,
+      428
+    ],
+    "size": [
+      104,
+      120
+    ]
+  },
+  {
+    "file": "trees/tree_red.png",
+    "source_box": [
+      12,
+      452,
+      115,
+      575
+    ],
+    "size": [
+      104,
+      123
+    ]
+  },
+  {
+    "file": "trees/tree_willow.png",
+    "source_box": [
+      119,
+      452,
+      221,
+      575
+    ],
+    "size": [
+      108,
+      119
+    ]
+  },
+  {
+    "file": "trees/tree_yellow.png",
+    "source_box": [
+      225,
+      452,
+      333,
+      575
+    ],
+    "size": [
+      101,
+      120
+    ]
+  },
+  {
+    "file": "trees/tree_blossom.png",
+    "source_box": [
+      337,
+      452,
+      437,
+      575
+    ],
+    "size": [
+      99,
+      116
+    ]
+  },
+  {
+    "file": "trees/tree_large.png",
+    "source_box": [
+      441,
+      452,
+      548,
+      575
+    ],
+    "size": [
+      112,
+      129
+    ]
+  },
+  {
+    "file": "plants/bush_white.png",
+    "source_box": [
+      574,
+      306,
+      658,
+      386
+    ],
+    "size": [
+      82,
+      70
+    ]
+  },
+  {
+    "file": "plants/bush_pink.png",
+    "source_box": [
+      662,
+      306,
+      746,
+      386
+    ],
+    "size": [
+      84,
+      73
+    ]
+  },
+  {
+    "file": "plants/bush_red.png",
+    "source_box": [
+      750,
+      306,
+      834,
+      386
+    ],
+    "size": [
+      84,
+      72
+    ]
+  },
+  {
+    "file": "plants/bush_yellow.png",
+    "source_box": [
+      838,
+      306,
+      925,
+      386
+    ],
+    "size": [
+      84,
+      70
+    ]
+  },
+  {
+    "file": "plants/bush_blue.png",
+    "source_box": [
+      929,
+      306,
+      1016,
+      386
+    ],
+    "size": [
+      79,
+      69
+    ]
+  },
+  {
+    "file": "plants/flower_patch_01.png",
+    "source_box": [
+      574,
+      410,
+      658,
+      482
+    ],
+    "size": [
+      78,
+      60
+    ]
+  },
+  {
+    "file": "plants/flower_patch_02.png",
+    "source_box": [
+      662,
+      410,
+      746,
+      482
+    ],
+    "size": [
+      81,
+      63
+    ]
+  },
+  {
+    "file": "plants/flower_patch_03.png",
+    "source_box": [
+      750,
+      410,
+      834,
+      482
+    ],
+    "size": [
+      79,
+      65
+    ]
+  },
+  {
+    "file": "plants/flower_patch_04.png",
+    "source_box": [
+      838,
+      410,
+      925,
+      482
+    ],
+    "size": [
+      74,
+      67
+    ]
+  },
+  {
+    "file": "plants/flower_patch_05.png",
+    "source_box": [
+      929,
+      410,
+      1016,
+      482
+    ],
+    "size": [
+      74,
+      67
+    ]
+  },
+  {
+    "file": "plants/grass_tall.png",
+    "source_box": [
+      574,
+      509,
+      658,
+      579
+    ],
+    "size": [
+      73,
+      73
+    ]
+  },
+  {
+    "file": "plants/grass_plant.png",
+    "source_box": [
+      662,
+      509,
+      746,
+      579
+    ],
+    "size": [
+      71,
+      71
+    ]
+  },
+  {
+    "file": "plants/reeds.png",
+    "source_box": [
+      750,
+      509,
+      834,
+      579
+    ],
+    "size": [
+      73,
+      73
+    ]
+  },
+  {
+    "file": "plants/rock_small.png",
+    "source_box": [
+      838,
+      509,
+      925,
+      579
+    ],
+    "size": [
+      74,
+      53
+    ]
+  },
+  {
+    "file": "plants/rock_flower.png",
+    "source_box": [
+      929,
+      509,
+      1016,
+      579
+    ],
+    "size": [
+      82,
+      68
+    ]
+  },
+  {
+    "file": "bridges_docks/bridge_stone.png",
+    "source_box": [
+      1044,
+      307,
+      1160,
+      418
+    ],
+    "size": [
+      119,
+      115
+    ]
+  },
+  {
+    "file": "bridges_docks/bridge_wood.png",
+    "source_box": [
+      1164,
+      307,
+      1273,
+      418
+    ],
+    "size": [
+      110,
+      112
+    ]
+  },
+  {
+    "file": "bridges_docks/bridge_wood_wide.png",
+    "source_box": [
+      1277,
+      307,
+      1406,
+      418
+    ],
+    "size": [
+      127,
+      115
+    ]
+  },
+  {
+    "file": "bridges_docks/dock_01.png",
+    "source_box": [
+      1410,
+      307,
+      1526,
+      418
+    ],
+    "size": [
+      112,
+      114
+    ]
+  },
+  {
+    "file": "bridges_docks/dock_02.png",
+    "source_box": [
+      1044,
+      453,
+      1139,
+      550
+    ],
+    "size": [
+      96,
+      93
+    ]
+  },
+  {
+    "file": "bridges_docks/dock_03.png",
+    "source_box": [
+      1143,
+      453,
+      1252,
+      550
+    ],
+    "size": [
+      103,
+      92
+    ]
+  },
+  {
+    "file": "bridges_docks/boat.png",
+    "source_box": [
+      1256,
+      453,
+      1332,
+      550
+    ],
+    "size": [
+      72,
+      68
+    ]
+  },
+  {
+    "file": "bridges_docks/dock_poles.png",
+    "source_box": [
+      1336,
+      453,
+      1424,
+      550
+    ],
+    "size": [
+      82,
+      94
+    ]
+  },
+  {
+    "file": "bridges_docks/dock_rope.png",
+    "source_box": [
+      1428,
+      453,
+      1526,
+      550
+    ],
+    "size": [
+      93,
+      94
+    ]
+  },
+  {
+    "file": "community/community_hall.png",
+    "source_box": [
+      12,
+      634,
+      137,
+      748
+    ],
+    "size": [
+      132,
+      118
+    ]
+  },
+  {
+    "file": "community/library.png",
+    "source_box": [
+      141,
+      634,
+      256,
+      748
+    ],
+    "size": [
+      121,
+      115
+    ]
+  },
+  {
+    "file": "community/cafe.png",
+    "source_box": [
+      260,
+      634,
+      380,
+      748
+    ],
+    "size": [
+      120,
+      120
+    ]
+  },
+  {
+    "file": "community/market.png",
+    "source_box": [
+      384,
+      634,
+      510,
+      748
+    ],
+    "size": [
+      129,
+      122
+    ]
+  },
+  {
+    "file": "community/workshop.png",
+    "source_box": [
+      514,
+      634,
+      627,
+      748
+    ],
+    "size": [
+      120,
+      120
+    ]
+  },
+  {
+    "file": "community/greenhouse.png",
+    "source_box": [
+      631,
+      634,
+      732,
+      748
+    ],
+    "size": [
+      109,
+      115
+    ]
+  },
+  {
+    "file": "residential/house_small.png",
+    "source_box": [
+      743,
+      632,
+      849,
+      740
+    ],
+    "size": [
+      114,
+      107
+    ]
+  },
+  {
+    "file": "residential/house_cottage.png",
+    "source_box": [
+      853,
+      632,
+      962,
+      740
+    ],
+    "size": [
+      115,
+      109
+    ]
+  },
+  {
+    "file": "residential/house_townhouse.png",
+    "source_box": [
+      966,
+      632,
+      1071,
+      740
+    ],
+    "size": [
+      113,
+      110
+    ]
+  },
+  {
+    "file": "residential/house_farm.png",
+    "source_box": [
+      1075,
+      632,
+      1192,
+      740
+    ],
+    "size": [
+      119,
+      114
+    ]
+  },
+  {
+    "file": "parks/park.png",
+    "source_box": [
+      1200,
+      630,
+      1314,
+      737
+    ],
+    "size": [
+      121,
+      108
+    ]
+  },
+  {
+    "file": "parks/garden.png",
+    "source_box": [
+      1318,
+      630,
+      1425,
+      737
+    ],
+    "size": [
+      111,
+      102
+    ]
+  },
+  {
+    "file": "parks/gazebo.png",
+    "source_box": [
+      1429,
+      630,
+      1527,
+      737
+    ],
+    "size": [
+      100,
+      107
+    ]
+  },
+  {
+    "file": "commercial/general_store.png",
+    "source_box": [
+      12,
+      798,
+      124,
+      900
+    ],
+    "size": [
+      114,
+      97
+    ]
+  },
+  {
+    "file": "commercial/bakery.png",
+    "source_box": [
+      128,
+      798,
+      243,
+      900
+    ],
+    "size": [
+      118,
+      99
+    ]
+  },
+  {
+    "file": "commercial/florist.png",
+    "source_box": [
+      247,
+      798,
+      357,
+      900
+    ],
+    "size": [
+      111,
+      102
+    ]
+  },
+  {
+    "file": "commercial/pet_supply.png",
+    "source_box": [
+      361,
+      798,
+      472,
+      900
+    ],
+    "size": [
+      110,
+      102
+    ]
+  },
+  {
+    "file": "commercial/clinic.png",
+    "source_box": [
+      476,
+      798,
+      589,
+      900
+    ],
+    "size": [
+      119,
+      109
+    ]
+  },
+  {
+    "file": "commercial/town_office.png",
+    "source_box": [
+      593,
+      798,
+      718,
+      900
+    ],
+    "size": [
+      126,
+      105
+    ]
+  },
+  {
+    "file": "utility/recycling_center.png",
+    "source_box": [
+      737,
+      799,
+      832,
+      900
+    ],
+    "size": [
+      103,
+      100
+    ]
+  },
+  {
+    "file": "utility/compost_facility.png",
+    "source_box": [
+      836,
+      799,
+      930,
+      900
+    ],
+    "size": [
+      96,
+      96
+    ]
+  },
+  {
+    "file": "utility/water_mill.png",
+    "source_box": [
+      934,
+      799,
+      1025,
+      900
+    ],
+    "size": [
+      93,
+      105
+    ]
+  },
+  {
+    "file": "utility/warehouse.png",
+    "source_box": [
+      1029,
+      799,
+      1129,
+      900
+    ],
+    "size": [
+      106,
+      101
+    ]
+  },
+  {
+    "file": "props/bench.png",
+    "source_box": [
+      1148,
+      789,
+      1220,
+      836
+    ],
+    "size": [
+      57,
+      47
+    ]
+  },
+  {
+    "file": "props/bench_log.png",
+    "source_box": [
+      1224,
+      789,
+      1296,
+      836
+    ],
+    "size": [
+      60,
+      45
+    ]
+  },
+  {
+    "file": "props/signboard.png",
+    "source_box": [
+      1300,
+      789,
+      1372,
+      836
+    ],
+    "size": [
+      47,
+      44
+    ]
+  },
+  {
+    "file": "props/lamp_post.png",
+    "source_box": [
+      1376,
+      789,
+      1449,
+      836
+    ],
+    "size": [
+      26,
+      53
+    ]
+  },
+  {
+    "file": "props/fence_wood.png",
+    "source_box": [
+      1453,
+      789,
+      1524,
+      836
+    ],
+    "size": [
+      59,
+      46
+    ]
+  },
+  {
+    "file": "props/fence_stone.png",
+    "source_box": [
+      1148,
+      862,
+      1220,
+      916
+    ],
+    "size": [
+      64,
+      55
+    ]
+  },
+  {
+    "file": "props/fence_flower.png",
+    "source_box": [
+      1224,
+      862,
+      1296,
+      916
+    ],
+    "size": [
+      66,
+      55
+    ]
+  },
+  {
+    "file": "props/arch_flower.png",
+    "source_box": [
+      1300,
+      862,
+      1372,
+      916
+    ],
+    "size": [
+      61,
+      58
+    ]
+  },
+  {
+    "file": "props/table.png",
+    "source_box": [
+      1376,
+      862,
+      1449,
+      916
+    ],
+    "size": [
+      56,
+      50
+    ]
+  },
+  {
+    "file": "props/chair.png",
+    "source_box": [
+      1453,
+      862,
+      1524,
+      916
+    ],
+    "size": [
+      35,
+      48
+    ]
+  },
+  {
+    "file": "props/crate.png",
+    "source_box": [
+      803,
+      938,
+      860,
+      998
+    ],
+    "size": [
+      50,
+      47
+    ]
+  },
+  {
+    "file": "props/barrel.png",
+    "source_box": [
+      864,
+      938,
+      926,
+      998
+    ],
+    "size": [
+      38,
+      48
+    ]
+  },
+  {
+    "file": "props/well.png",
+    "source_box": [
+      930,
+      938,
+      995,
+      998
+    ],
+    "size": [
+      55,
+      55
+    ]
+  },
+  {
+    "file": "props/fountain.png",
+    "source_box": [
+      999,
+      938,
+      1064,
+      998
+    ],
+    "size": [
+      61,
+      62
+    ]
+  },
+  {
+    "file": "props/planter.png",
+    "source_box": [
+      1068,
+      938,
+      1135,
+      998
+    ],
+    "size": [
+      51,
+      54
+    ]
+  },
+  {
+    "file": "props/sign_hanging.png",
+    "source_box": [
+      1139,
+      938,
+      1205,
+      998
+    ],
+    "size": [
+      42,
+      44
+    ]
+  },
+  {
+    "file": "props/sign_post.png",
+    "source_box": [
+      1209,
+      938,
+      1278,
+      998
+    ],
+    "size": [
+      36,
+      59
+    ]
+  },
+  {
+    "file": "props/bench_long.png",
+    "source_box": [
+      1282,
+      938,
+      1354,
+      998
+    ],
+    "size": [
+      54,
+      51
+    ]
+  },
+  {
+    "file": "props/map_board.png",
+    "source_box": [
+      1358,
+      938,
+      1440,
+      998
+    ],
+    "size": [
+      50,
+      53
+    ]
+  },
+  {
+    "file": "props/sign_info.png",
+    "source_box": [
+      1444,
+      938,
+      1523,
+      998
+    ],
+    "size": [
+      40,
+      62
+    ]
+  },
+  {
+    "file": "background/background_sky.png",
+    "source_box": [
+      11,
+      928,
+      786,
+      995
+    ],
+    "size": [
+      775,
+      67
+    ]
+  }
+]
